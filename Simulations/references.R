@@ -16,7 +16,7 @@
   source("Simulations/models.R")
 
   # Simulation size
-  simsize <- 50000
+  simsize <- 250000
   
   # Seed
   set.seed(2610)
@@ -83,11 +83,22 @@
       simdata[simdata[,1]==state,state] <- simdata[simdata[,1]==state,state]-0.5
     }
     
-    # Mean values
+    # Unconditional expectancy
     results_exp <- numeric(length(transient_states))
     names(results_exp) <- transient_states
     for(state in transient_states) {
       results_exp[state] <- mean(simdata[,state])
+    }
+    
+    # Conditional expectancy
+    results_ec <- numeric(2*length(transient_states))
+    names(results_ec) <- levels(interaction(transient_states,transient_states))
+    for(expect_state in transient_states) {
+      
+      for(starting_state in transient_states) {
+        results_ec[paste(starting_state,expect_state,sep=".")] <- mean(simdata[simdata$T_0==starting_state,expect_state])
+      }
+      
     }
     
     # Ever reaching a state
@@ -106,6 +117,7 @@
     
     # Place results
     references[[sim]] <- list(results_Ex=results_exp,
+                              results_Ec=results_ec,
                               results_Va=results_var,
                               results_Vs=results_ever)
  

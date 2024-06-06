@@ -14,7 +14,7 @@
                                        gen_duration=F, 
                                        gen_age = F,
                                        sample_size=100,
-                                       replications=100,
+                                       replications=250,
                                        initial_distr=c(0.5,0.5))
   
 
@@ -28,7 +28,7 @@
                                       gen_duration=F, 
                                       gen_age = F,
                                       sample_size=100,
-                                      replications=100,
+                                      replications=250,
                                       initial_distr=c(0.5,0.5))
   
 
@@ -43,7 +43,7 @@
                                       gen_duration=F, 
                                       gen_age = F,
                                       sample_size=100,
-                                      replications=100,
+                                      replications=250,
                                       initial_distr=c(0.5,0.5))
 
     
@@ -65,7 +65,7 @@
                                                           B=c(A=0.9,B=-0.9,X=0)),
                                      interpolation_duration = list(A="switch1",B="switch1"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
   
   # Switch 2
@@ -102,7 +102,7 @@
                                                           B=c(A=0.9,B=-0.9,X=0)),
                                      interpolation_duration = list(A="switch1",B="switch1"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
   
   # Switch 2
@@ -131,7 +131,7 @@
                                                           B=c(A=0.25,B=-0.25,X=0)),
                                      interpolation_duration = list(A="switch1",B="switch1"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
   
   # Switch 2
@@ -157,7 +157,7 @@
                                       diff_duration = list(A=c(A=0.79,B=-0.79,X=0.1)),
                                       interpolation_duration = list(A="linear"),
                                       sample_size=100,
-                                      replications=100,
+                                      replications=250,
                                       initial_distr=c(0.5,0.5))
   
 
@@ -175,7 +175,7 @@
                                      diff_duration = list(A=c(A=0.79,B=-0.79,X=0.1)),
                                      interpolation_duration = list(A="linear"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
   
 
@@ -193,7 +193,7 @@
                                      diff_duration = list(A=c(A=-0.79,B=0.79,X=0.1)),
                                      interpolation_duration = list(A="linear"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
   
 
@@ -211,7 +211,7 @@
                                      diff_duration = list(A=c(A=-0.79,B=0.79,X=0.1)),
                                      interpolation_duration = list(A="linear"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
 
     
@@ -232,7 +232,7 @@
                                                      B=c(A=0,B=0,X=0.2)),
                                      interpolation_age = list(A="linear",B="linear"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
 
   
@@ -253,7 +253,7 @@
                                                      B=c(A=0,B=0,X=0.2)),
                                      interpolation_age = list(A="sigmoid",B="sigmoid"),
                                      sample_size=100,
-                                     replications=100,
+                                     replications=250,
                                      initial_distr=c(0.5,0.5))
   
 

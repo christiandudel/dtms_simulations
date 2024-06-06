@@ -57,6 +57,7 @@
     
     # For results
     results_Ex <- list()
+    results_Ec <- list()
     results_Vs <- list()
     results_Va <- list()
     results_D <- list()
@@ -138,8 +139,14 @@
                                      start_distr=starting_distr,
                                      total = F)
       
-      results_exp <- as.numeric(results_exp["AVERAGE",])
-      names(results_exp) <- gensim$transient
+      # Unconditional
+      results_ex <- as.numeric(results_exp["AVERAGE",])
+      names(results_ex) <- gensim$transient
+      
+      # Conditional
+      results_ec <- as.numeric(results_exp[1:2,])
+      names(results_ec) <- levels(interaction(rownames(results_exp)[1:2],
+                                 colnames(results_exp)))
       
       # Probability of ever reaching a transient state
       results_ever <- numeric(n_transient)
@@ -171,7 +178,8 @@
                                   lags=1:5)
       
       ### Place in lists for results
-      results_Ex[[rep_nr]] <- results_exp
+      results_Ex[[rep_nr]] <- results_ex
+      results_Ec[[rep_nr]] <- results_ec
       results_Vs[[rep_nr]] <- results_ever
       results_Va[[rep_nr]] <- results_var
       results_D[[rep_nr]] <- results_dsim
@@ -181,6 +189,7 @@
     
     # Place in result list
     results[[sim]] <- list(results_Ex=results_Ex,
+                           results_Ec=results_Ec,
                            results_Vs=results_Vs,
                            results_Va=results_Va,
                            results_D=results_D)
