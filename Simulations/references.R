@@ -2,9 +2,7 @@
 ### would likely rely on the functions from dtms. Instead, we simulate large
 ### populations and then calculate reference values based on basic descriptive
 ### statistics. This way, the reference values also serve as a check for
-### the dtms function; i.e., if there is a consistent difference between 
-### reference value and the other simulations, then it could be because
-### of an issue with the dtms functions
+### the dtms functions.
 
 ### Packages ###################################################################
   
