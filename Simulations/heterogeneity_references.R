@@ -9,6 +9,7 @@
 
   # Packages
   library(dtms)
+  library(tidyverse)
   
   # Models and functions
   source("Functions/functions_simulation.R")
