@@ -85,20 +85,15 @@
     return(model_frame)
     
   }
-  
-  # # Test:
-  # model_test <- basic_sim(time_steps = 0:10,
-  #                            transient  = c("A","B"),
-  #                            absorbing  = "X",
-  #                            probs      = list(A=c(A=0.495,B=0.495,X=0.01),
-  #                                              B=c(A=0.495,B=0.495,X=0.01)))
-  
+
   
 ### Generate transition probabilities in data frame ############################
 
   # Things to be aware of:
-  # - Changes applied by age- or duration-dependence will not necessarily be applied 1-to-1, as probabilities have to sum to 1
-  # - After maximum duration is reached, there is a forced transition to either another state or death, with rescaling such that probabilities sum to 1
+  # - Changes applied by age- or duration-dependence will not necessarily be 
+  # applied 1-to-1, as probabilities have to sum to 1
+  # - After maximum duration is reached, there is a forced transition to either 
+  # another state or death, with rescaling such that probabilities sum to 1
 
   # Function
   generate_sim <- function(sim){ 
@@ -344,61 +339,6 @@
     return(model_frame)
     
   }
-  
-  # Old test cases
-  # # Test case 1
-  # model_test <- generate_sim(time_steps = 0:10,
-  #                            transient  = c("A","B"),
-  #                            absorbing  = "X",
-  #                            probs      = list(A=c(A=0.495,B=0.495,X=0.01),
-  #                                              B=c(A=0.495,B=0.495,X=0.01)))
-  # 
-  # # Test case 2
-  # model_test <- generate_sim(time_steps = 0:10,
-  #               transient  = c("A","B"),
-  #               absorbing  = "X",
-  #               probs      = list(A=c(A=0.495,B=0.495,X=0.01),
-  #                                B=c(A=0.495,B=0.495,X=0.01)),
-  #               gen_duration = T,
-  #               diff_duration = list(A=c(A=-0.1,B=0,X=0.1)),
-  #               which_duration = "A",
-  #               interpolation_duration = list(A="random"))
-  # test <- paste(paste0("A",0:10),"0",sep="_")
-  # test2 <- paste(paste0("A",0:10),"1",sep="_")
-  # model_test %>% filter(from%in%test & to%in%test2)
-  # model_test %>% filter(from=="A10_10")   
-  # 
-  # # Test case 3
-  # model_test <- generate_sim(time_steps = 0:100,
-  #                            transient  = c("A","B"),
-  #                            absorbing  = "X",
-  #                            probs      = list(A=c(A=0.1,B=0.89,X=0.01),
-  #                                              B=c(A=0.495,B=0.495,X=0.01)),
-  #                            gen_duration = T,
-  #                            which_duration = "A",
-  #                            diff_duration = list(A=c(A=0.79,B=-0.79,X=0.1)),
-  #                            interpolation_duration = list(A="linear"))
-  # model_test %>% filter(from=="A100_0")   
-  # 
-  # # Test case 3
-  # model_test <- generate_sim(time_steps = 0:100,
-  #                            transient  = c("A","B"),
-  #                            absorbing  = "X",
-  #                            probs      = list(A=c(A=0.1,B=0.89,X=0.01),
-  #                                              B=c(A=0.495,B=0.495,X=0.01)),
-  #                            gen_duration = T,
-  #                            which_duration = "A",
-  #                            diff_duration = list(A=c(A=0.79,B=-0.79,X=0.1)),
-  #                            interpolation_duration = list(A="linear"),
-  #                            gen_age = T,
-  #                            which_age = c("A","B"),
-  #                            diff_age = list(A=c(A=0,B=0,X=0.1),
-  #                                            B=c(A=0,B=0,X=0.2)),
-  #                            interpolation_age = list(A="linear",B="linear"))
-  # 
-  # model_test %>% filter(from=="A1_0" & to=="B_1")   
-  # model_test %>% filter(from=="A100_0" & to=="B_1")   
-  # 
 
   
 ### Complete sim objects if not all entries ####################################

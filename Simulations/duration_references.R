@@ -2,7 +2,8 @@
 ### would likely rely on the functions from dtms. Instead, we simulate large
 ### populations and then calculate reference values based on basic descriptive
 ### statistics. This way, the reference values also serve as a check for
-### the dtms functions.
+### the dtms functions. Sample size is large enough to keep errors 
+### introduced by this negligible.
 
 ### Packages ###################################################################
   
@@ -11,7 +12,7 @@
   
   # Models and functions
   source("Functions/functions_simulation.R")
-  source("Simulations/models.R")
+  source("Simulations/duration_models.R")
 
   # Simulation size
   simsize <- 250000
