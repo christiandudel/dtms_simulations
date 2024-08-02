@@ -141,19 +141,31 @@
     
   }  
   
-### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 ### Select models ##############################################################
   
   # Correct moldes
   
-  DGP1 <- duration[c(21,41,61,81)]
-  DGP2 <- heterogeneity[c()]
+  # Duration and baseline
+  DGP1 <- duration[c(10,19,28,37)]
+  DGP3a <- duration[c(11,20,29,38)]
+  DGP3b <- duration[c(12,21,30,39)]
+  DGP3c <- duration[c(13,22,31,40)]
   
-  DGP3a <- NA
-  DGP3b <- NA
-  DGP3c <- NA
+  # Heterogeneity and baseline
+  DGP2 <- heterogeneity[c(5,9,13,17)]
+  DGP4a <- heterogeneity[c(6,10,14,18)]
+  DGP4b <- heterogeneity[c(7,11,15,19)]
+  DGP4c <- heterogeneity[c(8,12,16,20)]
   
-  DGP4a <- NA
-  DGP4b <- NA
-  DGP4c
+  
+### Build Table 1 ##############################################################
+  
+  digits <- 2
+  
+  DGP1t <- data.frame(Samplesize=c(250,500,1000,1500))
+  DGP1t$Ex <- unlist(lapply(DGP1,function(x) round(mean(x$results_Ex),digits=digits)))
+  DGP1t$Ec <- unlist(lapply(DGP1,function(x) round(mean(x$results_Ec),digits=digits)))
+  DGP1t$Vs <- unlist(lapply(DGP1,function(x) round(mean(x$results_Vs),digits=digits)))
+  DGP1t$Va <- unlist(lapply(DGP1,function(x) round(mean(x$results_Va),digits=digits)))
   

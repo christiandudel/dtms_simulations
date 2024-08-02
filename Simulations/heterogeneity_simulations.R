@@ -147,13 +147,14 @@
                                    data = simdata)
       
       # Estimate model
-      fit <- dtms_fit(data     = simdata,
-                      controls = "time")
+      fit <- dtms_fullfit(data     = simdata,
+                          controls = "time")
       
       # Predict probabilities for transition matrix
       model1_p <- dtms_transitions(model    = fit,
                                    dtms     = simdtms,
-                                   controls = list(time=simdtms$timescale))
+                                   controls = list(time=simdtms$timescale),
+                                   se=F)
       
       # Get into transition matrix
       sim1T <- dtms_matrix(dtms=simdtms,
