@@ -2,10 +2,11 @@
 
   models <- list()
 
-### No group differences #######################################################
+  
+### No unobserved heterogeneity [DGP 2] ########################################
   
   # Probabilities
-  death <- 0.02
+  death <- 0.025
   even <- (1-death)/3
   
   # Group A
@@ -51,28 +52,34 @@
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
                                      replications=250,sample_size=100)
   
-### Very strong group differences ##############################################
-
+  
+### Weak group differences [DGP 4a] ############################################
+  
+  # Probabilities
+  death <- 0.025
+  sticky <- (1-death)*0.4
+  nonsticky <- (1-death-sticky)/2
+  
   # Group A
   groupA <- list(time_steps = 0:10,
                  transient  = c("A","B","C"),
                  absorbing  = "X",
-                 probs      = list(A=c(A=0.9,B=0.04,C=0.04,X=0.02),
-                                   B=c(A=0.9,B=0.04,C=0.04,X=0.02),
-                                   C=c(A=0.9,B=0.04,C=0.04,X=0.02)),
-                                   gen_duration=F, 
-                                   gen_age = F,
-                                   sample_size=100,
-                                   replications=250,
-                                   initial_distr=c(1,0,0))
-
+                 probs      = list(A=c(A=sticky,B=nonsticky,C=nonsticky,X=death),
+                                   B=c(A=sticky,B=nonsticky,C=nonsticky,X=death),
+                                   C=c(A=sticky,B=nonsticky,C=nonsticky,X=death)),
+                 gen_duration=F, 
+                 gen_age = F,
+                 sample_size=100,
+                 replications=250,
+                 initial_distr=c(1,0,0))
+  
   # Group B
   groupB <- list(time_steps = 0:10,
                  transient  = c("A","B","C"),
                  absorbing  = "X",
-                 probs      = list(A=c(A=0.04,B=0.9,C=0.04,X=0.02),
-                                   B=c(A=0.04,B=0.9,C=0.04,X=0.02),
-                                   C=c(A=0.04,B=0.9,C=0.04,X=0.02)),
+                 probs      = list(A=c(A=nonsticky,B=sticky,C=nonsticky,X=death),
+                                   B=c(A=nonsticky,B=sticky,C=nonsticky,X=death),
+                                   C=c(A=nonsticky,B=sticky,C=nonsticky,X=death)),
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
@@ -83,9 +90,111 @@
   groupC <- list(time_steps = 0:10,
                  transient  = c("A","B","C"),
                  absorbing  = "X",
-                 probs      = list(A=c(A=0.04,B=0.04,C=0.9,X=0.02),
-                                   B=c(A=0.04,B=0.04,C=0.9,X=0.02),
-                                   C=c(A=0.04,B=0.04,C=0.9,X=0.02)),
+                 probs      = list(A=c(A=nonsticky,B=nonsticky,C=sticky,X=death),
+                                   B=c(A=nonsticky,B=nonsticky,C=sticky,X=death),
+                                   C=c(A=nonsticky,B=nonsticky,C=sticky,X=death)),
+                 gen_duration=F, 
+                 gen_age = F,
+                 sample_size=100,
+                 replications=250,
+                 initial_distr=c(0,0,1))
+  
+  # Combine
+  models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
+                                     replications=250,sample_size=100)   
+  
+  
+### Strong group differences [DGP 4b] ##########################################
+  
+  # Probabilities
+  death <- 0.025
+  sticky <- (1-death)*0.6
+  nonsticky <- (1-death-sticky)/2
+  
+  # Group A
+  groupA <- list(time_steps = 0:10,
+                 transient  = c("A","B","C"),
+                 absorbing  = "X",
+                 probs      = list(A=c(A=sticky,B=nonsticky,C=nonsticky,X=death),
+                                   B=c(A=sticky,B=nonsticky,C=nonsticky,X=death),
+                                   C=c(A=sticky,B=nonsticky,C=nonsticky,X=death)),
+                 gen_duration=F, 
+                 gen_age = F,
+                 sample_size=100,
+                 replications=250,
+                 initial_distr=c(1,0,0))
+  
+  # Group B
+  groupB <- list(time_steps = 0:10,
+                 transient  = c("A","B","C"),
+                 absorbing  = "X",
+                 probs      = list(A=c(A=nonsticky,B=sticky,C=nonsticky,X=death),
+                                   B=c(A=nonsticky,B=sticky,C=nonsticky,X=death),
+                                   C=c(A=nonsticky,B=sticky,C=nonsticky,X=death)),
+                 gen_duration=F, 
+                 gen_age = F,
+                 sample_size=100,
+                 replications=250,
+                 initial_distr=c(0,1,0))
+  
+  # Group C
+  groupC <- list(time_steps = 0:10,
+                 transient  = c("A","B","C"),
+                 absorbing  = "X",
+                 probs      = list(A=c(A=nonsticky,B=nonsticky,C=sticky,X=death),
+                                   B=c(A=nonsticky,B=nonsticky,C=sticky,X=death),
+                                   C=c(A=nonsticky,B=nonsticky,C=sticky,X=death)),
+                 gen_duration=F, 
+                 gen_age = F,
+                 sample_size=100,
+                 replications=250,
+                 initial_distr=c(0,0,1))
+  
+  # Combine
+  models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
+                                     replications=250,sample_size=100)   
+  
+  
+### Very strong group differences [DGP 4c] #####################################
+
+  # Probabilities
+  death <- 0.025
+  sticky <- (1-death)*0.8
+  nonsticky <- (1-death-sticky)/2
+  
+  # Group A
+  groupA <- list(time_steps = 0:10,
+                 transient  = c("A","B","C"),
+                 absorbing  = "X",
+                 probs      = list(A=c(A=sticky,B=nonsticky,C=nonsticky,X=death),
+                                   B=c(A=sticky,B=nonsticky,C=nonsticky,X=death),
+                                   C=c(A=sticky,B=nonsticky,C=nonsticky,X=death)),
+                 gen_duration=F, 
+                 gen_age = F,
+                 sample_size=100,
+                 replications=250,
+                 initial_distr=c(1,0,0))
+  
+  # Group B
+  groupB <- list(time_steps = 0:10,
+                 transient  = c("A","B","C"),
+                 absorbing  = "X",
+                 probs      = list(A=c(A=nonsticky,B=sticky,C=nonsticky,X=death),
+                                   B=c(A=nonsticky,B=sticky,C=nonsticky,X=death),
+                                   C=c(A=nonsticky,B=sticky,C=nonsticky,X=death)),
+                 gen_duration=F, 
+                 gen_age = F,
+                 sample_size=100,
+                 replications=250,
+                 initial_distr=c(0,1,0))
+  
+  # Group C
+  groupC <- list(time_steps = 0:10,
+                 transient  = c("A","B","C"),
+                 absorbing  = "X",
+                 probs      = list(A=c(A=nonsticky,B=nonsticky,C=sticky,X=death),
+                                   B=c(A=nonsticky,B=nonsticky,C=sticky,X=death),
+                                   C=c(A=nonsticky,B=nonsticky,C=sticky,X=death)),
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
@@ -95,143 +204,6 @@
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
                                      replications=250,sample_size=100)
-  
-  
-### Strong group differences ###################################################
-  
-  # Group A
-  groupA <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.75,B=0.115,C=0.115,X=0.02),
-                                   B=c(A=0.75,B=0.115,C=0.115,X=0.02),
-                                   C=c(A=0.75,B=0.115,C=0.115,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(1,0,0))
-  
-  # Group B
-  groupB <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.115,B=0.75,C=0.115,X=0.02),
-                                   B=c(A=0.115,B=0.75,C=0.115,X=0.02),
-                                   C=c(A=0.115,B=0.75,C=0.115,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(0,1,0))
-  
-  # Group C
-  groupC <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.115,B=0.115,C=0.75,X=0.02),
-                                   B=c(A=0.115,B=0.115,C=0.75,X=0.02),
-                                   C=c(A=0.115,B=0.115,C=0.75,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(0,0,1))
-  
-  # Combine
-  models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=250,sample_size=100) 
-  
-  
-### Moderate group differences #################################################  
-
-  # Group A
-  groupA <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.4,B=0.29,C=0.29,X=0.02),
-                                   B=c(A=0.4,B=0.29,C=0.29,X=0.02),
-                                   C=c(A=0.4,B=0.29,C=0.29,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(1,0,0))
-  
-  # Group B
-  groupB <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.29,B=0.4,C=0.29,X=0.02),
-                                   B=c(A=0.29,B=0.4,C=0.29,X=0.02),
-                                   C=c(A=0.29,B=0.4,C=0.29,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(0,1,0))
-  
-  # Group C
-  groupC <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.29,B=0.29,C=0.4,X=0.02),
-                                   B=c(A=0.29,B=0.29,C=0.4,X=0.02),
-                                   C=c(A=0.29,B=0.29,C=0.4,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(0,0,1))
-  
-  # Combine
-  models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=250,sample_size=100) 
-  
-### Weak group differences #####################################################  
-  
-  # Group A
-  groupA <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.35,B=0.315,C=0.315,X=0.02),
-                                   B=c(A=0.35,B=0.315,C=0.315,X=0.02),
-                                   C=c(A=0.35,B=0.315,C=0.315,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(1,0,0))
-  
-  # Group B
-  groupB <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.315,B=0.35,C=0.315,X=0.02),
-                                   B=c(A=0.315,B=0.35,C=0.315,X=0.02),
-                                   C=c(A=0.315,B=0.35,C=0.315,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(0,1,0))
-  
-  # Group C
-  groupC <- list(time_steps = 0:10,
-                 transient  = c("A","B","C"),
-                 absorbing  = "X",
-                 probs      = list(A=c(A=0.315,B=0.315,C=0.35,X=0.02),
-                                   B=c(A=0.315,B=0.315,C=0.35,X=0.02),
-                                   C=c(A=0.315,B=0.315,C=0.35,X=0.02)),
-                 gen_duration=F, 
-                 gen_age = F,
-                 sample_size=100,
-                 replications=250,
-                 initial_distr=c(0,0,1))
-  
-  # Combine
-  models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=250,sample_size=100) 
   
   
 ### Additional sample sizes ####################################################  
