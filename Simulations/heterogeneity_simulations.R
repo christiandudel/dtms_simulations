@@ -104,8 +104,7 @@
         tmpdata <- dtms_simulate(matrix=get(paste0("Tm",group)),
                                  dtms=general,
                                  size=gensim$sample_size,
-                                 start_distr=starting_distr,
-                                 droplast=F)
+                                 start_distr=starting_distr)
         
         # Simplify
         tmpdata <- simplifydata(tmpdata)

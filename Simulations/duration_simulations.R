@@ -80,11 +80,11 @@
                                dtms=general,
                                size=sample_size,
                                start_distr=starting_distr,
-                               droplast=F)
+                               droplast=T)
 
       # Simplify
       simdata <- simplifydata(simdata)
-
+      
       # Add IDs
       simdata$id <- 1:sample_size
       
@@ -118,7 +118,8 @@
       # Estimate model
       fit <- dtms_fullfit(data     = simdata,
                           controls = "time")
-      
+      # fit <- dtms_fullfit(data     = simdata)
+
       # Predict probabilities for transition matrix
       model1_p <- dtms_transitions(model    = fit,
                                    dtms     = simdtms,
