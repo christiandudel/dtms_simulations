@@ -6,7 +6,7 @@
 ### No unobserved heterogeneity [DGP 2] ########################################
   
   # Probabilities
-  death <- 0.025
+  death <- 0.02
   even <- (1-death)/3
   
   # Group A
@@ -56,7 +56,7 @@
 ### Weak group differences [DGP 4a] ############################################
   
   # Probabilities
-  death <- 0.025
+  death <- 0.02
   sticky <- (1-death)*0.4
   nonsticky <- (1-death-sticky)/2
   
@@ -107,7 +107,7 @@
 ### Strong group differences [DGP 4b] ##########################################
   
   # Probabilities
-  death <- 0.025
+  death <- 0.02
   sticky <- (1-death)*0.6
   nonsticky <- (1-death-sticky)/2
   
@@ -158,7 +158,7 @@
 ### Very strong group differences [DGP 4c] #####################################
 
   # Probabilities
-  death <- 0.025
+  death <- 0.02
   sticky <- (1-death)*0.8
   nonsticky <- (1-death-sticky)/2
   
