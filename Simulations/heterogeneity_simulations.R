@@ -126,6 +126,9 @@
       
       }
       
+      # Copy
+      tmpdata <- simdata
+      
       # Simulation dtms
       simdtms <- dtms(transient = gensimA$transient,
                       timescale = gensimA$time_steps,
@@ -181,12 +184,62 @@
       # Probability of ever reaching a transient state
       results_ever <- numeric(n_transient)
       names(results_ever) <- gensim$transient
-      for(state in gensim$transient) {
-        tmp <- dtms_risk(matrix=sim1T,
-                         risk=state,
-                         dtms=simdtms,
-                         start_distr = starting_distr)
-        results_ever[state] <- tmp["AVERAGE"]
+      
+      for(whichstate in gensim$transient) {
+        
+        # DTMS
+        everdtms <- dtms(transient = gensim$transient[-which(gensim$transient==whichstate)],
+                         timescale = gensim$time_steps,
+                         absorbing = c(gensim$absorbing,whichstate))
+        
+        # Transition format
+        everdata <- dtms_format(data=tmpdata,
+                                dtms=everdtms,
+                                verbose=F)
+        
+        # Cleaning
+        everdata <- dtms_clean(data    = everdata,
+                               dtms    = everdtms,
+                               verbose = F)
+        
+        # Minor fix for small sample size: add X if not in data
+        if(!any(everdata$to%in%gensim$absorbing)) {
+          howmanyabsorbing <- length(gensim$absorbing)
+          datasize <- dim(everdata)[1]
+          for(abs in 1:howmanyabsorbing) everdata$to[sample(1:datasize,2)] <- rep(gensim$absorbing[abs],2)
+        }
+        
+        # Starting distribution
+        ever_distr <- dtms_start(dtms = everdtms,
+                                 data = everdata)
+        
+        # Estimate model
+        everfit <- dtms_fullfit(data     = everdata,
+                                formula = to~1+time)
+        
+        # Predict probabilities for transition matrix
+        ever_p <- dtms_transitions(model    = everfit,
+                                   dtms     = everdtms,
+                                   controls = list(time=everdtms$timescale),
+                                   se=F)
+        
+        # Get into transition matrix
+        everT <- dtms_matrix(dtms=everdtms,
+                             probs=ever_p)
+        
+        # Risk 
+        tmp <- dtms_risk(matrix=everT,
+                         risk=whichstate,
+                         dtms=everdtms,
+                         start_distr = ever_distr)
+        
+        # Probability of starting in absorbing state
+        pr <- which(names(results_ever)==whichstate)
+        pr <- starting_distr[pr]
+        
+        # Assign
+        results_ever[whichstate] <- tmp[1]*(1-pr)+pr
+        
       }
       
       # Variance
