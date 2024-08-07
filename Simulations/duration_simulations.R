@@ -180,9 +180,13 @@
         ever_distr <- dtms_start(dtms = everdtms,
                                  data = everdata)
         
+        # Get model formula right 
+        if(length(everdtms$transient)==1) everfitform <- formula(to~1+time) else 
+          everfitform <- formula(to~from+time)
+        
         # Estimate model
         everfit <- dtms_fullfit(data     = everdata,
-                                formula = to~1+time)
+                                formula = everfitform)
         
         # Predict probabilities for transition matrix
         ever_p <- dtms_transitions(model    = everfit,
