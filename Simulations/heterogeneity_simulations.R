@@ -86,7 +86,12 @@
       cat(".")
       
       # Empty data frame to build up
-      simdata <- tibble(id=character(),time=numeric(),state=character())
+      simdata <- dtms_simulate(matrix=TmA,
+                               dtms=general,
+                               size=1,
+                               start_distr=gensimA$initial_distr)
+      simdata$id <- 1
+      simdata <- simdata[-1,]
       
       # Loop over groups
       for(group in c("A","B","C")) {
@@ -112,19 +117,19 @@
         # Add IDs
         tmpdata$id <- paste0(group,1:gensim$sample_size)
         
-        # Reshape
-        tmpdata <- tmpdata %>% pivot_longer(cols=starts_with("T_"),
-                                            names_prefix="T_",
-                                            names_to="time",
-                                            values_to="state")
-        
-        # Change time var
-        class(tmpdata$time) <- "numeric"
-        
         # Combine
         simdata <- rbind(simdata,tmpdata)
       
       }
+
+      # Reshape
+      simdata <- simdata %>% pivot_longer(cols=starts_with("T_"),
+                                          names_prefix="T_",
+                                          names_to="time",
+                                          values_to="state")
+      
+      # Change time var
+      class(simdata$time) <- "numeric"
       
       # Copy
       tmpdata <- simdata
