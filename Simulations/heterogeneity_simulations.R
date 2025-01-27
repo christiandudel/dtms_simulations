@@ -38,27 +38,47 @@
     simmodelB <- generate_sim(gensimB)
     simmodelC <- generate_sim(gensimC)
     
+    # General transient states
+    transient_states <- gensimA$transient
+    
     # For transition matrix: add duration to states
     if(gensimA$gen_duration) {
-      transient_states <- levels(interaction(gensimA$which_duration,1:(max(gensimA$time_steps)+1),sep=""))
-      transient_states <- c(transient_states,gensimA$transient[!gensimA$transient%in%gensimA$which_duration])
-    } else transient_states <- gensimA$transient
+      transient_statesA <- levels(interaction(gensimA$which_duration,1:(max(gensimA$time_steps)+1),sep=""))
+      transient_statesA <- c(transient_statesA,gensimA$transient[!gensimA$transient%in%gensimA$which_duration])
+    } else transient_statesA <- gensimA$transient
+    
+    if(gensimB$gen_duration) {
+      transient_statesB <- levels(interaction(gensimB$which_duration,1:(max(gensimB$time_steps)+1),sep=""))
+      transient_statesB <- c(transient_statesB,gensimB$transient[!gensimB$transient%in%gensimB$which_duration])
+    } else transient_statesB <- gensimB$transient
+    
+    if(gensimC$gen_duration) {
+      transient_statesC <- levels(interaction(gensimC$which_duration,1:(max(gensimC$time_steps)+1),sep=""))
+      transient_statesC <- c(transient_statesC,gensimC$transient[!gensimC$transient%in%gensimC$which_duration])
+    } else transient_statesC <- gensimC$transient
     
     # General model
-    general <- dtms(transient=transient_states,
+    generalA <- dtms(transient=transient_statesA,
                     absorbing=gensimA$absorbing,
                     timescale=gensimA$time_steps)
     
+    generalB <- dtms(transient=transient_statesB,
+                     absorbing=gensimB$absorbing,
+                     timescale=gensimB$time_steps)
+    
+    generalC <- dtms(transient=transient_statesC,
+                     absorbing=gensimC$absorbing,
+                     timescale=gensimC$time_steps)
+    
     # Transition matrix
     TmA <- dtms_matrix(probs=simmodelA,
-                      dtms=general)
+                      dtms=generalA)
     
     TmB <- dtms_matrix(probs=simmodelB,
-                       dtms=general)
+                       dtms=generalB)
     
     TmC <- dtms_matrix(probs=simmodelC,
-                       dtms=general)
-    
+                       dtms=generalC)
     
     # Settings
     replications <- models[[sim]]$replications
@@ -77,8 +97,7 @@
     results_Ec <- list()
     results_Vs <- list()
     results_Va <- list()
-    results_D <- list()
-    
+
     # Loop over replications
     for(rep_nr in 1:replications) {
       
@@ -87,35 +106,38 @@
       
       # Empty data frame to build up
       simdata <- dtms_simulate(matrix=TmA,
-                               dtms=general,
-                               size=1,
-                               start_distr=gensimA$initial_distr)
+                               dtms=generalA,
+                               size=1)
       simdata$id <- 1
       simdata <- simdata[-1,]
       
       # Loop over groups
       for(group in c("A","B","C")) {
       
-        # Starting distribution
-        gensim <- get(paste0("gensim",group))
-        values <- gensim$initial_distr
-        if(gensim$gen_duration) {
-          starting_distr <- numeric(length(transient_states))
-          starting_distr[1:length(values)] <- values
-        }  else starting_distr <- values
+        # Objects
+        gensimgroup <- get(paste0("gensim",group))
+        transientgroup <- get(paste0("transient_states",group))
+        values <- gensimgroup$initial_distr
+        general <- get(paste0("general",group))
         
+        # Starting distribution
+        if(gensimgroup$gen_duration) {
+          starting_distr <- numeric(length(transientgroup))
+          whichtofill <- match(transient_states,substr(transientgroup,1,1))
+          starting_distr[whichtofill] <- values
+        }  else starting_distr <- values
         
         # Simulate data
         tmpdata <- dtms_simulate(matrix=get(paste0("Tm",group)),
                                  dtms=general,
-                                 size=gensim$sample_size,
+                                 size=gensimgroup$sample_size,
                                  start_distr=starting_distr)
         
         # Simplify
         tmpdata <- simplifydata(tmpdata)
         
         # Add IDs
-        tmpdata$id <- paste0(group,1:gensim$sample_size)
+        tmpdata$id <- paste0(group,1:gensimgroup$sample_size)
         
         # Combine
         simdata <- rbind(simdata,tmpdata)
@@ -179,7 +201,7 @@
       
       # Unconditional
       results_ex <- as.numeric(results_exp["AVERAGE",])
-      names(results_ex) <- gensim$transient
+      names(results_ex) <- transient_states
       
       # Conditional
       results_ec <- as.numeric(results_exp[1:n_transient,])
@@ -188,73 +210,58 @@
       
       # Probability of ever reaching a transient state
       results_ever <- numeric(n_transient)
-      names(results_ever) <- gensim$transient
+      names(results_ever) <- transient_states
       
-      for(whichstate in gensim$transient) {
+      for(whichstate in transient_states) {
         
-        # DTMS
-        everdtms <- dtms(transient = gensim$transient[-which(gensim$transient==whichstate)],
-                         timescale = gensim$time_steps,
-                         absorbing = c(gensim$absorbing,whichstate))
+        # Carry forward 
+        riskdata <- dtms_forward(data=as.data.frame(tmpdata),
+                                 state=whichstate,
+                                 dtms=simdtms)
         
         # Transition format
-        everdata <- dtms_format(data=tmpdata,
-                                dtms=everdtms,
+        riskdata <- dtms_format(data=riskdata,
+                                dtms=simdtms,
                                 verbose=F)
         
         # Cleaning
-        everdata <- dtms_clean(data    = everdata,
-                               dtms    = everdtms,
+        riskdata <- dtms_clean(data    = riskdata,
+                               dtms    = simdtms,
                                verbose = F)
         
-        # Minor fix for small sample size: add X if not in data
-        if(!any(everdata$to%in%gensim$absorbing)) {
-          howmanyabsorbing <- length(gensim$absorbing)
-          datasize <- dim(everdata)[1]
-          for(abs in 1:howmanyabsorbing) everdata$to[sample(1:datasize,2)] <- rep(gensim$absorbing[abs],2)
-        }
-        
         # Starting distribution
-        ever_distr <- dtms_start(dtms = everdtms,
-                                 data = everdata)
-        
-        # Get model formula right 
-        if(length(everdtms$transient)==1) everfitform <- formula(to~1+time) else 
-          everfitform <- formula(to~from+time)
+        starting_risk <- dtms_start(dtms = simdtms,
+                                    data = riskdata)
         
         # Estimate model
-        everfit <- dtms_fullfit(data     = everdata,
-                                formula = everfitform)
+        riskfit <- dtms_fullfit(data     = riskdata,
+                                controls = "time")
         
         # Predict probabilities for transition matrix
-        ever_p <- dtms_transitions(model    = everfit,
-                                   dtms     = everdtms,
-                                   controls = list(time=everdtms$timescale),
-                                   se=F)
+        model1_risk <- dtms_transitions(model    = riskfit,
+                                        dtms     = simdtms,
+                                        controls = list(time=simdtms$timescale),
+                                        se=F)
         
-        # Get into transition matrix
-        everT <- dtms_matrix(dtms=everdtms,
-                             probs=ever_p)
+        # Get into matrix
+        riskT <- dtms_matrix(dtms=simdtms,
+                             probs=model1_risk)
         
-        # Risk 
-        tmp <- dtms_risk(matrix=everT,
+        # Get risk        
+        tmp <- dtms_risk(matrix=riskT,
                          risk=whichstate,
-                         dtms=everdtms,
-                         start_distr = ever_distr)
-        
-        # Probability of starting in absorbing state
-        pr <- which(names(results_ever)==whichstate)
-        pr <- starting_distr[pr]
+                         dtms=simdtms,
+                         start_distr = starting_risk)
         
         # Assign
-        results_ever[whichstate] <- tmp[1]*(1-pr)+pr
+        results_ever[whichstate] <- tmp["AVERAGE"]
         
       }
       
       # Variance
       results_var <- numeric(n_transient)
-      names(results_var) <- gensim$transient
-      for(state in gensim$transient) {
+      names(results_var) <- transient_states
+      for(state in transient_states) {
         tmp <- dtms_visits(matrix=sim1T,
                            risk=state,
                            dtms=simdtms,
@@ -263,28 +270,19 @@
         results_var[state] <- sim_var(tmp)["AVERAGE"]
       }
       
-      ### Dissimilarity index
-      # results_dsim <-  dtms_delta(data= as.data.frame(simdata),
-      #                             dtms= simdtms,
-      #                             controls = "time",
-      #                             lags=1:5)
-      
       ### Place in lists for results
       results_Ex[[rep_nr]] <- results_ex
       results_Ec[[rep_nr]] <- results_ec
       results_Vs[[rep_nr]] <- results_ever
       results_Va[[rep_nr]] <- results_var
-      results_D[[rep_nr]] <- NULL#results_dsim
-      
-      
+
     } # End of replication loop
     
     # Place in result list
     results[[sim]] <- list(results_Ex=results_Ex,
                            results_Ec=results_Ec,
                            results_Vs=results_Vs,
-                           results_Va=results_Va,
-                           results_D=results_D)
+                           results_Va=results_Va)
     
   } # End of model loop
 

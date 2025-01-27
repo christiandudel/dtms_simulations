@@ -59,8 +59,7 @@
     results_Ec <- list()
     results_Vs <- list()
     results_Va <- list()
-    results_D <- list()
-    
+
     # Loop over replications
     for(rep_nr in 1:replications) {
       
@@ -153,63 +152,48 @@
       names(results_ever) <- gensim$transient
       
       for(whichstate in gensim$transient) {
-        
-        # DTMS
-        everdtms <- dtms(transient = gensim$transient[-which(gensim$transient==whichstate)],
-                         timescale = gensim$time_steps,
-                         absorbing = c(gensim$absorbing,whichstate))
+
+        # Carry forward 
+        riskdata <- dtms_forward(data=as.data.frame(tmpdata),
+                                 state=whichstate,
+                                 dtms=simdtms)
         
         # Transition format
-        everdata <- dtms_format(data=tmpdata,
-                                dtms=everdtms,
-                                verbose=F)
-
-        # Cleaning
-        everdata <- dtms_clean(data    = everdata,
-                               dtms    = everdtms,
-                               verbose = F)
+        riskdata <- dtms_format(data=riskdata,
+                               dtms=simdtms,
+                               verbose=F)
         
-        # Minor fix for small sample size: add X if not in data
-        if(!any(everdata$to%in%gensim$absorbing)) {
-          howmanyabsorbing <- length(gensim$absorbing)
-          datasize <- dim(everdata)[1]
-          for(abs in 1:howmanyabsorbing) everdata$to[sample(1:datasize,2)] <- rep(gensim$absorbing[abs],2)
-        }
+        # Cleaning
+        riskdata <- dtms_clean(data    = riskdata,
+                              dtms    = simdtms,
+                              verbose = F)
         
         # Starting distribution
-        ever_distr <- dtms_start(dtms = everdtms,
-                                 data = everdata)
-        
-        # Get model formula right 
-        if(length(everdtms$transient)==1) everfitform <- formula(to~1+time) else 
-          everfitform <- formula(to~from+time)
+        starting_risk <- dtms_start(dtms = simdtms,
+                                     data = riskdata)
         
         # Estimate model
-        everfit <- dtms_fullfit(data     = everdata,
-                                formula = everfitform)
+        riskfit <- dtms_fullfit(data     = riskdata,
+                            controls = "time")
         
         # Predict probabilities for transition matrix
-        ever_p <- dtms_transitions(model    = everfit,
-                                   dtms     = everdtms,
-                                   controls = list(time=everdtms$timescale),
-                                   se=F)
+        model1_risk <- dtms_transitions(model    = riskfit,
+                                        dtms     = simdtms,
+                                        controls = list(time=simdtms$timescale),
+                                        se=F)
         
-        # Get into transition matrix
-        everT <- dtms_matrix(dtms=everdtms,
-                             probs=ever_p)
-        
-        # Risk 
-        tmp <- dtms_risk(matrix=everT,
+        # Get into matrix
+        riskT <- dtms_matrix(dtms=simdtms,
+                             probs=model1_risk)
+
+        # Get risk        
+        tmp <- dtms_risk(matrix=riskT,
                          risk=whichstate,
-                         dtms=everdtms,
-                         start_distr = ever_distr)
-        
-        # Probability of starting in absorbing state
-        pr <- which(names(results_ever)==whichstate)
-        pr <- starting_distr[pr]
-        
+                         dtms=simdtms,
+                         start_distr = starting_risk)
+
         # Assign
-        results_ever[whichstate] <- tmp[1]*(1-pr)+pr
+        results_ever[whichstate] <- tmp["AVERAGE"]
         
       }
       
@@ -225,19 +209,11 @@
         results_var[state] <- sim_var(tmp)["AVERAGE"]
       }
 
-      ### Dissimilarity index
-      results_dsim <-  dtms_delta(data= as.data.frame(simdata),
-                                  dtms= simdtms,
-                                  controls = "time",
-                                  lags=1:5)
-      
       ### Place in lists for results
       results_Ex[[rep_nr]] <- results_ex
       results_Ec[[rep_nr]] <- results_ec
       results_Vs[[rep_nr]] <- results_ever
       results_Va[[rep_nr]] <- results_var
-      results_D[[rep_nr]] <- results_dsim
-      
 
     } # End of replication loop
     
@@ -245,8 +221,7 @@
     results[[sim]] <- list(results_Ex=results_Ex,
                            results_Ec=results_Ec,
                            results_Vs=results_Vs,
-                           results_Va=results_Va,
-                           results_D=results_D)
+                           results_Va=results_Va)
     
   } # End of model loop
 

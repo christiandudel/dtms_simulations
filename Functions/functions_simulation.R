@@ -227,11 +227,10 @@
         }
         
         # Last state only dies
-        last_state <- last(it_states)
-        model_frame <- model_frame %>% mutate(P=ifelse(from==last_state & to=="X",1,P),
-                                              P=ifelse(from==last_state & to!="X",0,P))
-        
-        
+        laststate <- paste0(i,max(time_steps)+1)
+        model_frame[model_frame$from==laststate,"P"] <- 0
+        model_frame[model_frame$from==laststate&model_frame$to==absorbing[1],"P"] <- 1
+
       }
     }
     
