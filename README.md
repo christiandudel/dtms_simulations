@@ -1,4 +1,4 @@
-# Bias in Markovian multistate models under violation of the Markov assumption
+# Bias in estimands of Markovian multistate models under violation of the Markov assumption
 
 Christian Dudel, dudel@demogr.mpg.de
 
