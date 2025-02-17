@@ -33,60 +33,7 @@
     return(res)
   }
   
-  
-### Generate trans probs in data frame, basic ##################################
-  
-  basic_sim <- function(transient,  # Character vector of transient states
-                        absorbing,  # Character vector of absorbing states
-                        time_steps, # Time steps of the process
-                        probs){     # Transition probabilities as named list
-    
-    # Packages
-    require(tidyverse)
-    
-    # Get full state space
-    state_space <- c(transient,absorbing)
-    
-    # Number of states
-    n_transient <- length(transient)
-    
-    # Create data frame
-    model_frame <- expand.grid(from=state_space,
-                               to=state_space,
-                               time=time_steps,
-                               stringsAsFactors=F)
-    
-    # Drop absorbing states as starting states
-    model_frame <- model_frame %>% filter(!from%in%absorbing)
-    
-    # Transition probabilities empty
-    model_frame$P <- NA
-    
-    # Place probabilities (no generated duration dependence)
-    for(i in transient) {
-      for(j in state_space) {
-        model_frame <- model_frame %>% mutate(P=ifelse(from==i & to==j,probs[[i]][j],P))
-      }
-    }
- 
-    # Everybody dies
-    model_frame <- model_frame %>% mutate(
-      P=ifelse(time==max(time_steps) & to==absorbing[1],1,P),
-      P=ifelse(time==max(time_steps) & to!=absorbing[1],0,P) 
-    )
-    
-    # Rename values
-    model_frame <- model_frame %>% mutate(
-      from=ifelse(from%in%transient,paste(from,time,sep="_"),from),
-      to  =ifelse(to%in%transient,paste(to,time+1,sep="_"),to)
-    )
-    
-    # Return
-    return(model_frame)
-    
-  }
 
-  
 ### Generate transition probabilities in data frame ############################
 
   # Things to be aware of:
@@ -358,6 +305,9 @@
   }
   
 ### Functions to be applied on simulated data ##################################
+  
+  ## Some of these are used (or could be used) in
+  ## https://github.com/christiandudel/dtms_data
   
   # Absorbing states only once
   drop_dead <- function(data,absorbing){
