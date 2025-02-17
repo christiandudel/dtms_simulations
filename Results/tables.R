@@ -144,8 +144,6 @@
 
 ### Select models ##############################################################
   
-  # Correct moldes
-  
   # Duration and baseline
   DGP1 <- duration[c(10,28,37)]
   DGP3a <- duration[c(11,29,38)]
@@ -158,6 +156,7 @@
   DGP4b <- heterogeneity[c(10,24,31)]
   DGP4c <- heterogeneity[c(11,25,32)]
   
+  # Duration + heterogeneity
   DGP5a <- heterogeneity[c(12,26,33)]
   DGP5b <- heterogeneity[c(13,27,34)]
   DGP5c <- heterogeneity[c(14,28,35)]

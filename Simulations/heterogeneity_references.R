@@ -13,7 +13,7 @@
   
   # Models and functions
   source("Functions/functions_simulation.R")
-  source("Simulations/heterogeneity_models.R")
+  source("Setup/heterogeneity_models.R")
   
   # Simulation size
   simsize <- 250000

@@ -6,7 +6,7 @@
 
   # Models and functions
   source("Functions/functions_simulation.R")
-  source("Simulations/duration_models.R")
+  source("Setup/duration_models.R")
 
   # Seed
   set.seed(1701)
