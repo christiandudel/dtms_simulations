@@ -177,7 +177,7 @@
       
       # Estimate model
       fit <- dtms_fullfit(data     = simdata,
-                          controls = "time")
+                          controls ="s(time)")
       
       # Predict probabilities for transition matrix
       model1_p <- dtms_transitions(model    = fit,
@@ -217,6 +217,7 @@
         # Carry forward 
         riskdata <- dtms_forward(data=as.data.frame(tmpdata),
                                  state=whichstate,
+                                 statevar="state",
                                  dtms=simdtms)
         
         # Transition format
@@ -235,7 +236,7 @@
         
         # Estimate model
         riskfit <- dtms_fullfit(data     = riskdata,
-                                controls = "time")
+                                controls ="s(time)")
         
         # Predict probabilities for transition matrix
         model1_risk <- dtms_transitions(model    = riskfit,

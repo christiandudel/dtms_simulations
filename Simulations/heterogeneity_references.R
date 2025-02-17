@@ -16,7 +16,7 @@
   source("Simulations/heterogeneity_models.R")
   
   # Simulation size
-  simsize <- 100000
+  simsize <- 250000
   
   # Seed
   set.seed(2610)

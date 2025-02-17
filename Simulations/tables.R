@@ -153,10 +153,14 @@
   DGP3c <- duration[c(13,31,40)]
   
   # Heterogeneity and baseline
-  DGP2 <- heterogeneity[c(5,13,17)]
-  DGP4a <- heterogeneity[c(6,14,18)]
-  DGP4b <- heterogeneity[c(7,15,19)]
-  DGP4c <- heterogeneity[c(8,16,20)]
+  DGP2 <- heterogeneity[c(8,22,29)]
+  DGP4a <- heterogeneity[c(9,23,30)]
+  DGP4b <- heterogeneity[c(10,24,31)]
+  DGP4c <- heterogeneity[c(11,25,32)]
+  
+  DGP5a <- heterogeneity[c(12,26,33)]
+  DGP5b <- heterogeneity[c(13,27,34)]
+  DGP5c <- heterogeneity[c(14,28,35)]
   
   
 ### Build Table 1 ##############################################################
@@ -219,9 +223,32 @@
   DGP4ct$Vs <- unlist(lapply(DGP4c,function(x) round(mean(abs(x$results_Vs)),digits=digits)))
   DGP4ct$Va <- unlist(lapply(DGP4c,function(x) round(mean(abs(x$results_Va)),digits=digits)))
   
+  DGP5at <- data.frame(Samplesize=c(250,1000,2500))
+  DGP5at$DGP <- "DGP5a"
+  DGP5at$Ex <- unlist(lapply(DGP5a,function(x) round(mean(abs(x$results_Ex)),digits=digits)))
+  DGP5at$Ec <- unlist(lapply(DGP5a,function(x) round(mean(abs(x$results_Ec)),digits=digits)))
+  DGP5at$Vs <- unlist(lapply(DGP5a,function(x) round(mean(abs(x$results_Vs)),digits=digits)))
+  DGP5at$Va <- unlist(lapply(DGP5a,function(x) round(mean(abs(x$results_Va)),digits=digits)))
+  
+  DGP5bt <- data.frame(Samplesize=c(250,1000,2500))
+  DGP5bt$DGP <- "DGP5b"
+  DGP5bt$Ex <- unlist(lapply(DGP5b,function(x) round(mean(abs(x$results_Ex)),digits=digits)))
+  DGP5bt$Ec <- unlist(lapply(DGP5b,function(x) round(mean(abs(x$results_Ec)),digits=digits)))
+  DGP5bt$Vs <- unlist(lapply(DGP5b,function(x) round(mean(abs(x$results_Vs)),digits=digits)))
+  DGP5bt$Va <- unlist(lapply(DGP5b,function(x) round(mean(abs(x$results_Va)),digits=digits)))
+  
+  DGP5ct <- data.frame(Samplesize=c(250,1000,2500))
+  DGP5ct$DGP <- "DGP5c"
+  DGP5ct$Ex <- unlist(lapply(DGP5c,function(x) round(mean(abs(x$results_Ex)),digits=digits)))
+  DGP5ct$Ec <- unlist(lapply(DGP5c,function(x) round(mean(abs(x$results_Ec)),digits=digits)))
+  DGP5ct$Vs <- unlist(lapply(DGP5c,function(x) round(mean(abs(x$results_Vs)),digits=digits)))
+  DGP5ct$Va <- unlist(lapply(DGP5c,function(x) round(mean(abs(x$results_Va)),digits=digits)))
+  
   Table1a <- rbind(DGP1t,DGP3at,DGP3bt,DGP3ct)
   Table1b <- rbind(DGP2t,DGP4at,DGP4bt,DGP4ct)
+  Table1c <- rbind(DGP2t,DGP5at,DGP5bt,DGP5ct)
   
   Table1a[c("DGP","Samplesize","Ex","Ec","Vs","Va")]
   Table1b[c("DGP","Samplesize","Ex","Ec","Vs","Va")]
+  Table1c[c("DGP","Samplesize","Ex","Ec","Vs","Va")]
   
