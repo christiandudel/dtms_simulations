@@ -2,12 +2,16 @@
 
 Christian Dudel, dudel@demogr.mpg.de
 
+## Overview
+
 This repository contains R code for simulations assessing the bias of several statistics 
 estimated using Markovian discrete-time multistate models when the Markov assumption 
 is violated. This includes simulation scenarios with duration dependence,
 unobserved heterogeneity, and combinations of both duration dependence and
 unobserved heterogeneity. Running the code requires, among other things,
 the package dtms, which is available at https://github.com/christiandudel/dtms.
+
+## Folders
 
 There are four folders: Functions, Setup, Simulations, Results. The folder 
 Functions contains one file which collects several helper-functions used
@@ -19,7 +23,15 @@ which run the actual simulations, including the calculation of reference values.
 Finally, the folder Results contains all results and an R file which creates
 an overview of the findings. 
 
-The simulations have the following set of parameters:
+## Workflow
+
+The workflow currently has four major steps: (1) setting up the simulation scenarios;
+(2) calculating reference values; (3) running the simulations; and (4) 
+calculating bias by comparing the results of steps (2) and (3).
+
+## Setting up simulation scenarios
+
+The simulations are set up as named lists with the following set of entries:
 - transient: names of the transient states, specified as a character vector. 
 - absorbing: names of the absorbing states, specified as a character vector. 
 - time_steps: values of the time scale, specified as a numeric vector.
