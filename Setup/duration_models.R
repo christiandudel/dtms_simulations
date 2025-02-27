@@ -1,28 +1,23 @@
+### Setup ######################################################################
+
+  source("Setup/parameters.R")
+
 ### Empty list for models ######################################################
 
   models <- list()
 
-  
-### Setup ######################################################################
-  
-  death <- 0.02
-  even <- (1-death)/2
-  diff1 <- 0.1
-  diff2 <- 0.2
-  diff3 <- 0.3
-  
   
 ### Fully Markovian [DGP 1] ####################################################
   
   models[[length(models)+1]] <-   list(time_steps = 0:10,
                                        transient  = c("A","B"),
                                        absorbing  = "X",
-                                       probs      = list(A=c(A=even,B=even,X=death),
-                                                         B=c(A=even,B=even,X=death)),
+                                       probs      = list(A=c(A=even2,B=even2,X=death),
+                                                         B=c(A=even2,B=even2,X=death)),
                                        gen_duration=F, 
                                        gen_age = F,
                                        sample_size=100,
-                                       replications=500,
+                                       replications=replications,
                                        initial_distr=c(0.5,0.5))
   
   
@@ -31,8 +26,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:10,
                                      transient  = c("A","B"),
                                      absorbing  = "X",
-                                     probs      = list(A=c(A=even,B=even,X=death),
-                                                       B=c(A=even,B=even,X=death)),
+                                     probs      = list(A=c(A=even2,B=even2,X=death),
+                                                       B=c(A=even2,B=even2,X=death)),
                                      gen_age = F,
                                      gen_duration = T,
                                      which_duration = c("A","B"),
@@ -40,7 +35,7 @@
                                                           B=c(A=-diff1,B=diff1,X=0)),
                                      interpolation_duration = list(A="switch1",B="switch1"),
                                      sample_size=100,
-                                     replications=500,
+                                     replications=replications,
                                      initial_distr=c(0.5,0.5))
 
   
@@ -49,8 +44,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:10,
                                      transient  = c("A","B"),
                                      absorbing  = "X",
-                                     probs      = list(A=c(A=even,B=even,X=death),
-                                                       B=c(A=even,B=even,X=death)),
+                                     probs      = list(A=c(A=even2,B=even2,X=death),
+                                                       B=c(A=even2,B=even2,X=death)),
                                      gen_age = F,
                                      gen_duration = T,
                                      which_duration = c("A","B"),
@@ -58,7 +53,7 @@
                                                           B=c(A=-diff2,B=diff2,X=0)),
                                      interpolation_duration = list(A="switch1",B="switch1"),
                                      sample_size=100,
-                                     replications=500,
+                                     replications=replications,
                                      initial_distr=c(0.5,0.5))
 
     
@@ -67,8 +62,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:10,
                                      transient  = c("A","B"),
                                      absorbing  = "X",
-                                     probs      = list(A=c(A=even,B=even,X=death),
-                                                       B=c(A=even,B=even,X=death)),
+                                     probs      = list(A=c(A=even2,B=even2,X=death),
+                                                       B=c(A=even2,B=even2,X=death)),
                                      gen_age = F,
                                      gen_duration = T,
                                      which_duration = c("A","B"),
@@ -76,7 +71,7 @@
                                                           B=c(A=-diff3,B=diff3,X=0)),
                                      interpolation_duration = list(A="switch1",B="switch1"),
                                      sample_size=100,
-                                     replications=500,
+                                     replications=replications,
                                      initial_distr=c(0.5,0.5))  
 
 
@@ -85,8 +80,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:10,
                                      transient  = c("A","B"),
                                      absorbing  = "X",
-                                     probs      = list(A=c(A=even,B=even,X=death),
-                                                       B=c(A=even,B=even,X=death)),
+                                     probs      = list(A=c(A=even2,B=even2,X=death),
+                                                       B=c(A=even2,B=even2,X=death)),
                                      gen_age = F,
                                      gen_duration = T,
                                      which_duration = c("A","B"),
@@ -94,7 +89,7 @@
                                                           B=c(A=-diff3,B=diff3,X=0)),
                                      interpolation_duration = list(A="switch2",B="switch2"),
                                      sample_size=100,
-                                     replications=500,
+                                     replications=replications,
                                      initial_distr=c(0.5,0.5))    
   
   
@@ -103,8 +98,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:10,
                                       transient  = c("A","B"),
                                       absorbing  = "X",
-                                      probs      = list(A=c(A=even,B=even,X=death),
-                                                        B=c(A=even,B=even,X=death)),
+                                      probs      = list(A=c(A=even2,B=even2,X=death),
+                                                        B=c(A=even2,B=even2,X=death)),
                                       gen_age = F,
                                       gen_duration = T,
                                       which_duration = c("A","B"),
@@ -112,7 +107,7 @@
                                                            B=c(A=-diff3,B=diff3,X=0)),
                                       interpolation_duration = list(A="linear",B="linear"),
                                       sample_size=100,
-                                      replications=500,
+                                      replications=replications,
                                       initial_distr=c(0.5,0.5))
   
 
@@ -121,8 +116,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:25,
                                      transient  = c("A","B"),
                                      absorbing  = "X",
-                                     probs      = list(A=c(A=even,B=even,X=death),
-                                                       B=c(A=even,B=even,X=death)),
+                                     probs      = list(A=c(A=even2,B=even2,X=death),
+                                                       B=c(A=even2,B=even2,X=death)),
                                      gen_age = F,
                                      gen_duration = T,
                                      which_duration = c("A","B"),
@@ -130,7 +125,7 @@
                                                           B=c(A=-diff3,B=diff3,X=0)),
                                      interpolation_duration = list(A="linear",B="linear"),
                                      sample_size=100,
-                                     replications=500,
+                                     replications=replications,
                                      initial_distr=c(0.5,0.5))
 
 
@@ -139,8 +134,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:25,
                                      transient  = c("A","B"),
                                      absorbing  = "X",
-                                     probs      = list(A=c(A=even,B=even,X=death),
-                                                       B=c(A=even,B=even,X=death)),
+                                     probs      = list(A=c(A=even2,B=even2,X=death),
+                                                       B=c(A=even2,B=even2,X=death)),
                                      gen_duration = T,
                                      which_duration = c("A","B"),
                                      diff_duration = list(A=c(A=diff3,B=-diff3,X=0),
@@ -152,7 +147,7 @@
                                                      B=c(A=-0.1,B=0.1,X=0.2)),
                                      interpolation_age = list(A="linear",B="linear"),
                                      sample_size=100,
-                                     replications=500,
+                                     replications=replications,
                                      initial_distr=c(0.5,0.5))
 
   
@@ -161,8 +156,8 @@
   models[[length(models)+1]] <- list(time_steps = 0:25,
                                      transient  = c("A","B"),
                                      absorbing  = "X",
-                                     probs      = list(A=c(A=even,B=even,X=death),
-                                                       B=c(A=even,B=even,X=death)),
+                                     probs      = list(A=c(A=even2,B=even2,X=death),
+                                                       B=c(A=even2,B=even2,X=death)),
                                      gen_duration = T,
                                      which_duration = c("A","B"),
                                      diff_duration = list(A=c(A=diff3,B=-diff3,X=0),
@@ -174,7 +169,7 @@
                                                      B=c(A=-0.1,B=0.1,X=0.2)),
                                      interpolation_age = list(A="sigmoid",B="sigmoid"),
                                      sample_size=100,
-                                     replications=500,
+                                     replications=replications,
                                      initial_distr=c(0.5,0.5))
   
 

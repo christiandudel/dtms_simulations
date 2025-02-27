@@ -7,10 +7,8 @@
   # Models and functions
   source("Functions/functions_simulation.R")
   source("Setup/heterogeneity_models.R")
+  source("Setup/parameters.R")
   
-  # Seed
-  set.seed(1701)
-
 
 ### Object for results #########################################################
 
@@ -177,7 +175,7 @@
       
       # Estimate model
       fit <- dtms_fullfit(data     = simdata,
-                          controls ="s(time)")
+                          controls =timecontrol)
       
       # Predict probabilities for transition matrix
       model1_p <- dtms_transitions(model    = fit,
@@ -236,7 +234,7 @@
         
         # Estimate model
         riskfit <- dtms_fullfit(data     = riskdata,
-                                controls ="s(time)")
+                                controls =timecontrol)
         
         # Predict probabilities for transition matrix
         model1_risk <- dtms_transitions(model    = riskfit,

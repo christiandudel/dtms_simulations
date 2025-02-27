@@ -14,12 +14,7 @@
   # Models and functions
   source("Functions/functions_simulation.R")
   source("Setup/heterogeneity_models.R")
-  
-  # Simulation size
-  simsize <- 250000
-  
-  # Seed
-  set.seed(2610)
+  source("Setup/parameters.R")
 
 
 ### Object for results #########################################################

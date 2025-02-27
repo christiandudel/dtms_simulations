@@ -1,3 +1,8 @@
+### Setup ######################################################################
+
+  source("Setup/parameters.R")
+
+
 ### Empty lists for models #####################################################
 
   models <- list()
@@ -5,59 +10,54 @@
   
 ### No unobserved heterogeneity [DGP 2] ########################################
   
-  # Probabilities
-  death <- 0.02
-  even <- (1-death)/3
-  
   # Group A
   groupA <- list(time_steps = 0:10,
                  transient  = c("A","B","C"),
                  absorbing  = "X",
-                 probs      = list(A=c(A=even,B=even,C=even,X=death),
-                                   B=c(A=even,B=even,C=even,X=death),
-                                   C=c(A=even,B=even,C=even,X=death)),
+                 probs      = list(A=c(A=even3,B=even3,C=even3,X=death),
+                                   B=c(A=even3,B=even3,C=even3,X=death),
+                                   C=c(A=even3,B=even3,C=even3,X=death)),
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(1,0,0))
   
   # Group B
   groupB <- list(time_steps = 0:10,
                  transient  = c("A","B","C"),
                  absorbing  = "X",
-                 probs      = list(A=c(A=even,B=even,C=even,X=death),
-                                   B=c(A=even,B=even,C=even,X=death),
-                                   C=c(A=even,B=even,C=even,X=death)),
+                 probs      = list(A=c(A=even3,B=even3,C=even3,X=death),
+                                   B=c(A=even3,B=even3,C=even3,X=death),
+                                   C=c(A=even3,B=even3,C=even3,X=death)),
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,1,0))
   
   # Group C
   groupC <- list(time_steps = 0:10,
                  transient  = c("A","B","C"),
                  absorbing  = "X",
-                 probs      = list(A=c(A=even,B=even,C=even,X=death),
-                                   B=c(A=even,B=even,C=even,X=death),
-                                   C=c(A=even,B=even,C=even,X=death)),
+                 probs      = list(A=c(A=even3,B=even3,C=even3,X=death),
+                                   B=c(A=even3,B=even3,C=even3,X=death),
+                                   C=c(A=even3,B=even3,C=even3,X=death)),
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,0,1))
   
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=500,sample_size=100)
+                                     replications=replications,sample_size=100)
   
   
 ### Weak group differences [DGP 4a] ############################################
   
   # Probabilities
-  death <- 0.02
-  sticky <- (1-death)*0.4
+  sticky <- (1-death)*sticky1
   nonsticky <- (1-death-sticky)/2
   
   # Group A
@@ -70,7 +70,7 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(1,0,0))
   
   # Group B
@@ -83,7 +83,7 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,1,0))
   
   # Group C
@@ -96,19 +96,18 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,0,1))
   
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=500,sample_size=100)   
+                                     replications=replications,sample_size=100)   
   
   
 ### Strong group differences [DGP 4b] ##########################################
   
   # Probabilities
-  death <- 0.02
-  sticky <- (1-death)*0.5
+  sticky <- (1-death)*sticky2
   nonsticky <- (1-death-sticky)/2
   
   # Group A
@@ -121,7 +120,7 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(1,0,0))
   
   # Group B
@@ -134,7 +133,7 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,1,0))
   
   # Group C
@@ -147,19 +146,18 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,0,1))
   
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=500,sample_size=100)   
+                                     replications=replications,sample_size=100)   
   
   
 ### Very strong group differences [DGP 4c] #####################################
 
   # Probabilities
-  death <- 0.02
-  sticky <- (1-death)*0.6
+  sticky <- (1-death)*sticky3
   nonsticky <- (1-death-sticky)/2
   
   # Group A
@@ -172,7 +170,7 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(1,0,0))
   
   # Group B
@@ -185,7 +183,7 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,1,0))
   
   # Group C
@@ -198,23 +196,22 @@
                  gen_duration=F, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,0,1))
   
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=500,sample_size=100)
+                                     replications=replications,sample_size=100)
   
   
 ### Weak group differences, weak duration [DGP 5a] #############################
   
   # Probabilities
-  death <- 0.02
-  sticky <- (1-death)*0.4
+  sticky <- (1-death)*sticky1
   nonsticky <- (1-death-sticky)/2
   
   # Differences 
-  diff1 <- min(nonsticky,sticky,0.1)
+  difftmp <- min(nonsticky,sticky,diff1)
   
   # Group A
   groupA <- list(time_steps = 0:10,
@@ -226,10 +223,10 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(1,0,0),
                  which_duration = c("A"),
-                 diff_duration = list(A=c(A=diff1,B=-diff1,C=0,X=0)),
+                 diff_duration = list(A=c(A=difftmp,B=-difftmp,C=0,X=0)),
                  interpolation_duration = list(A="switch1"))
   
   # Group B
@@ -242,10 +239,10 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,1,0),
                  which_duration = c("B"),
-                 diff_duration = list(B=c(A=-diff1,B=diff1,C=0,X=0)),
+                 diff_duration = list(B=c(A=-difftmp,B=difftmp,C=0,X=0)),
                  interpolation_duration = list(B="switch1"))
   
   # Group C
@@ -258,26 +255,25 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,0,1),
                  which_duration = c("C"),
-                 diff_duration = list(C=c(A=-diff1,B=0,C=diff1,X=0)),
+                 diff_duration = list(C=c(A=-difftmp,B=0,C=difftmp,X=0)),
                  interpolation_duration = list(C="switch1"))
   
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=500,sample_size=100)     
+                                     replications=replications,sample_size=100)     
   
   
 ### Moderate group differences, moderate duration [DGP 5b] #####################
   
   # Probabilities
-  death <- 0.02
-  sticky <- (1-death)*0.5
+  sticky <- (1-death)*sticky2
   nonsticky <- (1-death-sticky)/2
   
   # Differences 
-  diff2 <- min(nonsticky,sticky,0.2)
+  difftmp <- min(nonsticky,sticky,diff2)  
   
   # Group A
   groupA <- list(time_steps = 0:10,
@@ -289,10 +285,10 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(1,0,0),
                  which_duration = c("A"),
-                 diff_duration = list(A=c(A=diff1,B=-diff1,C=0,X=0)),
+                 diff_duration = list(A=c(A=difftmp,B=-difftmp,C=0,X=0)),
                  interpolation_duration = list(A="switch1"))
   
   # Group B
@@ -305,10 +301,10 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,1,0),
                  which_duration = c("B"),
-                 diff_duration = list(B=c(A=-diff1,B=diff1,C=0,X=0)),
+                 diff_duration = list(B=c(A=-difftmp,B=difftmp,C=0,X=0)),
                  interpolation_duration = list(B="switch1"))
   
   # Group C
@@ -321,26 +317,25 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,0,1),
                  which_duration = c("C"),
-                 diff_duration = list(C=c(A=-diff1,B=0,C=diff1,X=0)),
+                 diff_duration = list(C=c(A=-difftmp,B=0,C=difftmp,X=0)),
                  interpolation_duration = list(C="switch1"))
   
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=500,sample_size=100)   
+                                     replications=replications,sample_size=100)   
   
   
 ### Strong group differences, strong duration [DGP 5c] #########################
   
   # Probabilities
-  death <- 0.02
-  sticky <- (1-death)*0.6
+  sticky <- (1-death)*sticky3
   nonsticky <- (1-death-sticky)/2
   
   # Differences 
-  diff3 <- min(nonsticky,sticky,0.3)
+  difftmp <- min(nonsticky,sticky,diff3)
   
   # Group A
   groupA <- list(time_steps = 0:10,
@@ -352,10 +347,10 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(1,0,0),
                  which_duration = c("A"),
-                 diff_duration = list(A=c(A=diff1,B=-diff1,C=0,X=0)),
+                 diff_duration = list(A=c(A=difftmp,B=-difftmp,C=0,X=0)),
                  interpolation_duration = list(A="switch1"))
   
   # Group B
@@ -368,10 +363,10 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,1,0),
                  which_duration = c("B"),
-                 diff_duration = list(B=c(A=-diff1,B=diff1,C=0,X=0)),
+                 diff_duration = list(B=c(A=-difftmp,B=difftmp,C=0,X=0)),
                  interpolation_duration = list(B="switch1"))
   
   # Group C
@@ -384,15 +379,15 @@
                  gen_duration=T, 
                  gen_age = F,
                  sample_size=100,
-                 replications=500,
+                 replications=replications,
                  initial_distr=c(0,0,1),
                  which_duration = c("C"),
-                 diff_duration = list(C=c(A=-diff1,B=0,C=diff1,X=0)),
+                 diff_duration = list(C=c(A=-difftmp,B=0,C=difftmp,X=0)),
                  interpolation_duration = list(C="switch1"))
   
   # Combine
   models[[length(models)+1]] <- list(groupA=groupA,groupB=groupB,groupC=groupC,
-                                     replications=500,sample_size=100)    
+                                     replications=replications,sample_size=100)    
   
   
 ### Additional sample sizes ####################################################  

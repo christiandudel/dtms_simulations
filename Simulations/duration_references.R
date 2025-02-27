@@ -13,13 +13,8 @@
   # Models and functions
   source("Functions/functions_simulation.R")
   source("Setup/duration_models.R")
+  source("Setup/parameters.R")
 
-  # Simulation size
-  simsize <- 250000
-  
-  # Seed
-  set.seed(2610)
-  
   
 ### Object for results #########################################################
   
@@ -129,11 +124,11 @@
    
 ### Save #######################################################################
   
+  # Save
   filename <- paste0("Results/dtms_sims_references.Rda")
   save(list=c("models","references"),
         file=filename)
 
-### Clear memory
-  
+  # Clear memory
   rm(list=ls())
   gc()
