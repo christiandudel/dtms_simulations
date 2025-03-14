@@ -25,7 +25,10 @@
   
   # Number of simulation models (only subset, as most simulations only differ by sample size)
   n_sims <- length(models_250)
-
+  
+  # Output
+  cat("\n","Duration references","\n")
+  
   # Loop
   for(sim in 1:n_sims) {
     

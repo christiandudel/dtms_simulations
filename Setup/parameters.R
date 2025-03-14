@@ -2,7 +2,7 @@
 set.seed(2610)
 
 # Size of reference population
-simsize <- 2500000
+simsize <- 1000000
 
 # Replications for simulations
 replications <- 1000
