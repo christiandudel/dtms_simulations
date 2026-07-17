@@ -3,7 +3,7 @@
   # Packages
   library(dtms)
   library(VGAM)
-
+  
   # Models and functions
   source("Functions/functions_simulation.R")
   source("Setup/duration_models.R")
@@ -14,12 +14,12 @@
 
   results <- list()
 
-  
+
 ### Loop over models ###########################################################
-  
+
   # Number of simulation models
   n_sims <- length(models)
-
+  
   # Loop
   for(sim in 1:n_sims) {
     
@@ -51,13 +51,13 @@
     replications <- gensim$replications
     sample_size <- gensim$sample_size
     nlength <- length(gensim$time_steps)
-
+    
     # For results
     results_Ex <- list()
     results_Ec <- list()
     results_Vs <- list()
     results_Va <- list()
-
+    
     # Loop over replications
     for(rep_nr in 1:replications) {
       
@@ -78,21 +78,21 @@
                                size=sample_size,
                                start_distr=starting_distr,
                                droplast=T)
-
+      
       # Simplify
       tmpdata <- simplifydata(tmpdata)
-
+      
       # Add IDs
       tmpdata$id <- 1:sample_size
       
       # Reshape
       tmpdata <- tmpdata %>% pivot_longer(cols=starts_with("T_"),
-                                            names_prefix="T_",
-                                            names_to="time",
-                                            values_to="state")
+                                          names_prefix="T_",
+                                          names_to="time",
+                                          values_to="state")
       
       class(tmpdata$time) <- "numeric"
-
+      
       # Simulation dtms
       simdtms <- dtms(transient = gensim$transient,
                       timescale = gensim$time_steps,
@@ -113,23 +113,18 @@
                                    data = simdata)
       
       # Estimate model
-      fit <- dtms_fullfit(data = simdata,
-                          controls =timecontrol)
-
-      # Predict probabilities for transition matrix
-      model1_p <- dtms_transitions(model    = fit,
-                                   dtms     = simdtms,
-                                   controls = list(time=simdtms$timescale),
-                                   se=F)
-
+      model1_p <- dtms_nonparametric(data=simdata,
+                                     dtms=simdtms,
+                                     se=F)
+      
       # Get into transition matrix
       sim1T <- dtms_matrix(dtms=simdtms,
                            probs=model1_p)
-
+      
       ### Matrix results
       n_transient <- length(gensim$transient)
       starting_states <- paste0(gensim$transient,"_0")
-
+      
       # State expectancies 
       results_exp <- dtms_expectancy(matrix=sim1T,
                                      dtms=simdtms,
@@ -143,14 +138,14 @@
       # Conditional
       results_ec <- as.numeric(results_exp[1:2,])
       names(results_ec) <- levels(interaction(rownames(results_exp)[1:2],
-                                 colnames(results_exp)))
+                                              colnames(results_exp)))
       
       # Probability of ever reaching a transient state
       results_ever <- numeric(n_transient)
       names(results_ever) <- gensim$transient
       
       for(whichstate in gensim$transient) {
-
+        
         # Carry forward 
         riskdata <- dtms_forward(data=as.data.frame(tmpdata),
                                  state=whichstate,
@@ -159,38 +154,52 @@
         
         # Transition format
         riskdata <- dtms_format(data=riskdata,
-                               dtms=simdtms,
-                               verbose=F)
+                                dtms=simdtms,
+                                verbose=F)
         
         # Cleaning
         riskdata <- dtms_clean(data    = riskdata,
-                              dtms    = simdtms,
-                              verbose = F)
+                               dtms    = simdtms,
+                               verbose = F)
         
         # Starting distribution
         starting_risk <- dtms_start(dtms = simdtms,
-                                     data = riskdata)
+                                    data = riskdata)
         
         # Estimate model
-        riskfit <- dtms_fullfit(data     = riskdata,
-                                controls =timecontrol)
+        model1_risk <- dtms_nonparametric(data=riskdata,
+                                          dtms=simdtms,
+                                          se=F)
         
-        # Predict probabilities for transition matrix
-        model1_risk <- dtms_transitions(model    = riskfit,
-                                        dtms     = simdtms,
-                                        controls = list(time=simdtms$timescale),
-                                        se=F)
+        # Fix zeros: temporary data frame
+        tmp <- model1_risk
+        tmp <- dtms_simplify(model1_risk)
+        tmp <- reshape(tmp,direction="wide",idvar=c("from","time"),timevar="to",v.names="P")
         
-        # Get into matrix
-        riskT <- dtms_matrix(dtms=simdtms,
-                             probs=model1_risk)
+        # Fix zeros: which rows
+        whichrows <- apply(tmp[,-c(1:2)],1,function(x) any(is.na(x)))
+        
+        # Fix zeros: fill with equal probability
+        manycols <- dim(tmp)[2]-2
+        fillvec <- rep(1/manycols,manycols) 
+        tmp[whichrows,-c(1:2)] <- fillvec
+        
+        # Fix zeros: back to long
+        tmp <- reshape(tmp,direction="long",varying=names(tmp)[-c(1:2)],sep=".",timevar="to")
+        tmp <- tmp[,-dim(tmp)[2]]
+        tmp$from <- paste0(tmp$from,"_",tmp$time)
+        tmp$to[tmp$to%in%simdtms$transient] <- paste0(tmp$to[tmp$to%in%simdtms$transient],"_",tmp$time[tmp$to%in%simdtms$transient]+1)
 
+        # Calculate risk
+        riskT <- dtms_matrix(dtms=simdtms,
+                             probs=tmp)
+        
         # Get risk        
         tmp <- dtms_risk(matrix=riskT,
                          risk=whichstate,
                          dtms=simdtms,
                          start_distr = starting_risk)
-
+        
         # Assign
         results_ever[whichstate] <- tmp["AVERAGE"]
         
@@ -207,13 +216,13 @@
         
         results_var[state] <- sim_var(tmp)["AVERAGE"]
       }
-
+      
       ### Place in lists for results
       results_Ex[[rep_nr]] <- results_ex
       results_Ec[[rep_nr]] <- results_ec
       results_Vs[[rep_nr]] <- results_ever
       results_Va[[rep_nr]] <- results_var
-
+      
     } # End of replication loop
     
     # Place in result list
@@ -224,13 +233,13 @@
     
   } # End of model loop
 
-  
+
 ### Save results ###############################################################
 
-  filename <- paste0("Results/dtms_sims.Rda")
+  filename <- paste0("Results/dtms_sims_np.Rda")
   save(list=c("models","results"),
        file=filename)
-
+  
   ### Clear memory
   rm(list=ls())
   gc()

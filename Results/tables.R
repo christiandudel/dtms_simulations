@@ -164,7 +164,7 @@
   
 ### Build Table 1 ##############################################################
   
-  digits <- 3
+  digits <- 4
   
   DGP1t <- data.frame(Samplesize=c(250,1000,2500))
   DGP1t$DGP <- "DGP1"
